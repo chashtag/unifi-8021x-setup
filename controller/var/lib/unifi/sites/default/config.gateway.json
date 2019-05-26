@@ -1,0 +1,15 @@
+{
+    "interfaces":{
+       "ethernet":{
+          "eth2":{
+             "mac":"XX:XX:XX:XX:XX:XX",
+             "vif":{
+                "0":{
+                   "mac":"XX:XX:XX:XX:XX:XX"
+                }
+             }
+          }
+       }
+    }
+ }
+ 

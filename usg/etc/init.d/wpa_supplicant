@@ -1,0 +1,67 @@
+#!/bin/bash
+#
+# wpa_supplicant        Startup script for wpa_supplicant
+#
+# chkconfig: - 85 15
+#
+# processname: wpa_supplicant
+# config: /config/wpa_supplicant.conf
+# pidfile: /var/run/wpa_supplicant.pid
+
+
+
+wpa_supplicant=/sbin/wpa_supplicant
+prog=wpa_supplicant
+pidfile=/var/run/wpa_supplicant.pid
+interface=eth2
+logfile=/var/log/wpa_supplicant.log
+conf_file=/config/wpa_supplicant.conf
+RETVAL=0
+
+
+start() {
+        echo -n $"Starting $prog: "
+        $wpa_supplicant -P${pidfile} -i$interface -f$logfile -c$conf_file -Dwired -B -d
+        RETVAL=$?
+        echo
+        return $RETVAL
+}
+
+stop() {
+    echo  "Stopping $prog: "
+    if [ -f ${pidfile} ] ; then
+        kill -9 `cat $pidfile`
+    else
+        echo "PID File not found, using pkill."
+        pkill -9 $prog
+    fi
+    RETVAL=$?
+    echo
+    rm -f ${pidfile}
+}
+
+
+# See how we were called.
+case "$1" in
+  start)
+    start
+    ;;
+  stop)
+    stop
+    ;;
+  restart)
+    stop
+    start
+    ;;
+  condrestart)
+    if [ -f ${pidfile} ] ; then
+        stop
+        start
+    fi
+    ;;
+  *)
+    echo $"Usage: $prog {start|stop|restart}"
+    exit 1
+esac
+
+exit $RETVAL
